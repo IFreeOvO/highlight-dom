@@ -1,0 +1,86 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - main  # 触发条件，可以根据需要修改
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy-production:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+        # 环境准备
+        - name: Checkout
+          uses: actions/checkout@v4
+        - name: Check for 'release' in commit messages
+          id: check_release
+          run: |
+            if git log -1 --pretty=%B | grep -q "release"; then
+              echo "继续执行后续流程"
+            else
+              echo "提交记录里没有包含 'release'，本次不执行发布流程"
+              exit 0
+            fi
+
+
+        - name: Setup pnpm
+          uses: pnpm/action-setup@v4
+
+        - name: Setup node
+          uses: actions/setup-node@v4
+          with:
+            node-version: 18
+            registry-url: 'https://registry.npmjs.org'
+        - name: Get pnpm store directory
+          id: pnpm-cache
+          run: |
+              echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+        - uses: actions/cache@v4
+          name: Setup pnpm cache
+          with:
+              path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+              key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+              restore-keys: |
+                ${{ runner.os }}-pnpm-store-
+    
+        # 发布npm
+        - name: Install dependencies
+          run: pnpm install --frozen-lockfile
+        - name: Lint
+          run: pnpm lint
+        - name: Test
+          run: pnpm test
+        - name: Build
+          run: pnpm build
+        - name: Publish
+          run: |
+            npm config set https://registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}
+            npm publish
+
+        # 部署github-page
+        - name: Copy dist
+          run: cp -r dist examples/
+        - name: Setup Pages
+          uses: actions/configure-pages@v5
+        - name: Upload artifact
+          uses: actions/upload-pages-artifact@v3
+          with:
+            path: './examples'
+        - name: Deploy to GitHub Pages
+          id: deployment
+          uses: actions/deploy-pages@v4
+
+      

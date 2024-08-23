@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .panel {
+            border: 1px solid red;
+        }
+
+        .simple-1 {
+            width: 50px;
+            height: 50px;
+            padding: 50px;
+            border: 50px solid yellow;
+            margin: 50px;
+            cursor: pointer;
+        }
+
+        .simple-2 {
+            width: 100px;
+            height: 100px;
+            padding: 50px;
+            border: 50px solid transparent;
+            box-sizing: border-box;
+            background-color: yellow;
+        }
+
+        .simple-3 {
+            width: 40px;
+            height: 40px;
+            padding: 20px;
+            border: 20px solid green;
+            margin: 20px;
+            transform: scale(0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <div style="padding:10px;">
+        <div style="position: sticky;top: 0;">
+            <input placeholder="输入css选择器" id="ipt"></input>
+            <button id="btn">高亮节点</button>
+        </div>
+
+        <div class="simple-1">test</div>
+
+        <div class="simple-2">border-box</div>
+
+        <div class="simple-3">缩放</div>
+
+        <div class="simple-4" style="display: none;">simple 4 隐藏</div>
+
+        <div class="simple-5" style="visibility: hidden;">simple 5 隐藏</div>
+
+        <svg style="width:100px;height:100px" class="svg-1">
+            <rect fill="red" style="width:100px;height:100px;padding: 10px;margin:10px" />
+        </svg>
+
+
+        <div class="panel">
+            <div>
+                <span>测试</span>
+                <div class="simple-6" id="simple">测试</div>
+                <svg width="100" height="100" class="svg-3">
+                    <rect width="100" height="100" fill="red" style="padding: 10px;margin:10px" />
+                </svg>
+                <div>测试-2</div>
+            </div>
+        </div>
+
+        <div id="list"></div>
+    </div>
+    <script src="./dist/umd/index.umd.js"></script>
+    <script>
+        const highlightDom = new __HD__.HighlightDom({
+            hash: 'abc',
+            plugins: [
+                // {
+                //     name: 'test',
+                //     hooks: {
+                //         beforeInitOverlay: (ctx) => {
+                //             ctx.tipBackgroundColor = '#fff'
+                //             ctx.tipSizeColor = '#333'
+                //         },
+                //         generateCss: (ctx) => {
+                //             ctx.style = ctx.style + `
+                //             .dom-inspector-${ctx.hash} .dom-inspector-margin-${ctx.hash} {
+                //                 background-color: red;
+                //             }
+                //             `
+                //         }
+                //     },
+                // }
+                // {
+                //     name: 'skip highlighting',
+                //     hooks: {
+                //         beforeCreateOverlay(ctx, options) {
+                //             const { target } = options
+                //             if (target.className === 'simple-6') {
+                //                 options.fragment = ''
+                //             }
+                //         },
+                //     },
+                // },
+            ]
+        })
+        let selector
+        document.querySelector("#ipt").addEventListener('input', function (e) {
+            selector = e.target.value
+        })
+
+        document.querySelector("#btn").addEventListener('click', function (e) {
+            highlightDom.highlight(document.querySelector(selector))
+        })
+    </script>
+    <script>
+        // highlightDom.highlight(document.querySelector('.simple-1'))
+        // highlightDom.highlight(document.querySelector('.simple-6'), {
+        //     mode: 'siblings'
+        // })
+
+        let template = ""
+        for (let i = 0; i < 1000; i++) {
+            template += `<div class='test-${i}' style="${i<5? 'display:none':''}">测试${i}</div>`
+        }
+        const dom = document.createRange().createContextualFragment(template)
+        document.querySelector('#list').appendChild(dom);
+
+        // highlightDom.highlight(document.querySelector('.test-25'), {
+        //     mode: 'siblings'
+        // })
+
+    </script>
+</body>
+
+</html>

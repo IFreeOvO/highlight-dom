@@ -1,0 +1,118 @@
+{
+    "name": "@ifreeovo/highlight-dom",
+    "version": "1.0.0",
+    "description": "实现类似dom-inspector的高亮效果",
+    "buildOptions": {
+        "globalName": "__HD__"
+    },
+    "main": "./dist/umd/index.umd.js",
+    "module": "./dist/es/main.js",
+    "types": "./dist/global.d.ts",
+    "unpkg": "dist/umd/index.umd.js",
+    "jsdelivr": "dist/umd/index.umd.js",
+    "exports": {
+        ".": {
+            "types": "./dist/global.d.ts",
+            "import": "./dist/es/main.js",
+            "require": "./dist/umd/index.umd.js"
+        },
+        "./es": {
+            "types": "./dist/global.d.ts",
+            "import": "./dist/es/main.js"
+        },
+        "./umd": {
+            "types": "./dist/global.d.ts",
+            "require": "./dist/umd/index.umd.js"
+        },
+        "./*": "./*"
+    },
+    "scripts": {
+        "preinstall": "only-allow pnpm",
+        "prepare": "husky",
+        "cz": "cz",
+        "dev": "rollup -c --environment BUILD:development -w --silent",
+        "build": "rimraf dist && rollup -c --environment BUILD:production",
+        "test": "vitest run --run --dom",
+        "lint": "eslint . --ext .ts,.json --max-warnings 0 --cache",
+        "release": "standard-version"
+    },
+    "files": [
+        "README.md",
+        "README_en.md",
+        "dist"
+    ],
+    "engines": {
+        "node": ">=18",
+        "pnpm": ">=8"
+    },
+    "packageManager": "pnpm@8.12.1",
+    "keywords": [
+        "dom-inspector",
+        "highlight-dom",
+        "highlight",
+        "chrome-devtools"
+    ],
+    "author": "IFreeOvO",
+    "license": "MIT",
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org/",
+        "provenance": true
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/IFreeOvO/highlight-dom.git"
+    },
+    "bugs": {
+        "url": "https://github.com/IFreeOvO/highlight-dom/issues"
+    },
+    "homepage": "https://github.com/IFreeOvO/highlight-dom/tree/main",
+    "dependencies": {
+        "nanoid": "^5.0.6",
+        "radash": "^12.1.0",
+        "requestidlecallback": "^0.3.0",
+        "tapable": "^2.2.1"
+    },
+    "devDependencies": {
+        "@commitlint/config-conventional": "^19.2.2",
+        "@rollup/plugin-alias": "^5.1.0",
+        "@rollup/plugin-commonjs": "^26.0.1",
+        "@rollup/plugin-node-resolve": "^15.2.3",
+        "@rollup/plugin-strip": "^3.0.4",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@types/requestidlecallback": "^0.3.7",
+        "@typescript-eslint/eslint-plugin": "^7.0.2",
+        "@typescript-eslint/parser": "^7.0.2",
+        "commitizen": "^4.3.0",
+        "commitlint": "^19.4.0",
+        "cz-git": "^1.9.0",
+        "eslint": "^8.56.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-import-resolver-typescript": "^3.6.1",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-prettier": "^5.1.3",
+        "flush-promises": "^1.0.2",
+        "happy-dom": "^14.12.3",
+        "husky": "^9.0.11",
+        "lint-staged": "^15.2.2",
+        "only-allow": "^1.2.1",
+        "prettier": "^3.2.5",
+        "rollup": "^4.13.2",
+        "rollup-plugin-dts": "^6.1.0",
+        "rollup-plugin-typescript2": "^0.36.0",
+        "standard-version": "^9.5.0",
+        "typescript": "^5.2.2",
+        "vitest": "^2.0.5"
+    },
+    "lint-staged": {
+        "*.{json,ts}": [
+            "prettier --write",
+            "eslint --fix"
+        ]
+    },
+    "config": {
+        "commitizen": {
+            "path": "cz-git"
+        }
+    }
+}
