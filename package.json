@@ -1,6 +1,6 @@
 {
     "name": "@ifreeovo/highlight-dom",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "实现类似dom-inspector的高亮效果",
     "buildOptions": {
         "globalName": "__HD__"
